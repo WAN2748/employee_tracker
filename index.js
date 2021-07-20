@@ -25,9 +25,8 @@ const runSearch = () => {
         choices: [
           'View all employees',
           'View all Employees by Department',
-          'View all Employees by Manager',
           'Add Employee',
-          'Remove Employee',
+          'Delete Employee',
           'Update Employee Role',
           'Update Employee Manager',
           'View all Roles',
@@ -48,8 +47,8 @@ const runSearch = () => {
             addEmployee();
             break;
   
-          case 'Remove Employee':
-            removeEmployee();
+          case 'Delete Employee':
+            deleteEmployee();
             break;
 
           case 'Update Employee Role':
@@ -86,7 +85,7 @@ const viewAll = () => {
     });
 }
 
-const employeeDepartment =() => {
+const employeeDepartment = () => {
   const query = `SELECT department.name AS department, role.title, employee.id, employee.first_name, employee.last_name
   FROM employee
   LEFT JOIN role ON role.id = employee.role_id
@@ -141,3 +140,43 @@ const addEmployee = () => {
     );
   });
 };
+
+const deleteEmployee = () => {
+  console.log('Delete Employee');
+
+  let query =
+  `SELECT employee.id, employee.first_name, employee.last_name FROM employee`
+
+  connection.query(query, (err, res) => {
+    if (err) throw err; 
+
+    const deleteChoices = res.map(({ id, first_name, last_name }) => ({
+      value: id, name: `${first_name} ${last_name}`
+    }));
+    console.table(res);
+    console.log('Delete Options:\n');
+    promptDelete(deleteChoices);
+  });
+}
+
+promptDelete = (deleteChoices) => {
+  inquirer.prompt([
+    {
+      name: 'employeeId',
+      type: "list",
+      message: 'Chose an employee to remove:',
+      choices: deleteChoices
+    }
+  ])
+  .then( (answer) => {
+    let query = `DELETE FROM employee WHERE ?`;
+    connection.query(query, { id: answer.employeeId }, ( err,res) => {
+      if (err) throw err;
+
+      console.table(res);
+      console.log(res.affectedRows + ' Employee Deleted\n');
+
+      runSearch();
+    });
+  });
+}
