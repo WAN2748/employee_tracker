@@ -11,4 +11,8 @@
 
 ## video
 
-![video](https://drive.google.com/file/d/1B7v4gNeChminEDa9GjlQWRK9VeFuouf-/view)
+[video](https://drive.google.com/file/d/1B7v4gNeChminEDa9GjlQWRK9VeFuouf-/view)
+
+![main](/assets/empTrack1.png)
+![all](/assets/empTrack2.png)
+![dep](/assets/empTrack.png)
